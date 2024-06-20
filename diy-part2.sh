@@ -10,7 +10,7 @@
 # See /LICENSE for more information.
 #
 
-sed -i 's/^src-git luci/#src-git luci/; s/^#src-git luci/src-git luci/' feeds.conf.default
+sed -i '2s/^/#/;3s/^#//' feeds.conf.default
 
 # Modify default IP
 sed -i 's/192.168.1.1/192.168.11.1/g' package/base-files/files/bin/config_generate
