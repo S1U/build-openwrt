@@ -12,7 +12,8 @@
 
 # Change Luci
 # Linux
-sed -i '2s/^/#/;3s/^#//' feeds.conf.default
+sed -i '2s/^/#/' feeds.conf.default
+# sed -i '2s/^/#/;3s/^#//' feeds.conf.default
 # Mac
 #sed -i '' -e '2s/^/#/' -e '3s/^#//' feeds.conf.default
 
