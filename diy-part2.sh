@@ -14,13 +14,13 @@
 # Linux
 sed -i '2s/^/#/;3s/^#//' feeds.conf.default
 # Mac
-sed -i '' -e '2s/^/#/' -e '3s/^#//' feeds.conf.default
+#sed -i '' -e '2s/^/#/' -e '3s/^#//' feeds.conf.default
 
 # Modify default IP
 # Linux
 sed -i 's/192.168.1.1/192.168.11.1/g' package/base-files/files/bin/config_generate
 # Mac
-sed -i '' 's/192.168.1.1/192.168.11.1/g' package/base-files/files/bin/config_generate
+#sed -i '' 's/192.168.1.1/192.168.11.1/g' package/base-files/files/bin/config_generate
 
 # Modify default theme
 #sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile
