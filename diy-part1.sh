@@ -10,8 +10,6 @@
 # See /LICENSE for more information.
 #
 
-echo 'src-git luci https://github.com/immortalwrt/luci' >>feeds.conf.default
-
 # Uncomment a feed source
 #sed -i 's/^#\(.*helloworld\)/\1/' feeds.conf.default
 
