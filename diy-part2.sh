@@ -14,7 +14,7 @@
 # Linux
 # sed -i '2s/^/#/' feeds.conf.default
 # sed -i '2c\src-git luci https://github.com/immortalwrt/luci' feeds.conf.default
-sed -i '2s/^/#/;3s/^#//' feeds.conf.default
+# sed -i '2s/^/#/;3s/^#//' feeds.conf.default
 
 # Modify default IP
 # Linux
