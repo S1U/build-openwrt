@@ -12,10 +12,10 @@
 
 # Change Luci
 # Linux
-sed -i '2s/^/#/;3s/^#//' feeds.conf.default
+# sed -i '2s/^/#/;3s/^#//' feeds.conf.default
 
 # Change Kernel
-sed -i 's/KERNEL_PATCHVER:=6.1/KERNEL_PATCHVER:=6.6/g' target/linux/rockchip/Makefile
+# sed -i 's/KERNEL_PATCHVER:=6.1/KERNEL_PATCHVER:=6.6/g' target/linux/rockchip/Makefile
 
 # Modify default IP
 # Linux
