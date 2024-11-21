@@ -14,6 +14,8 @@ name: 5s OpenWrt Builder
 
 on:
   repository_dispatch:
+    types:
+      - 5s-builder
   workflow_dispatch:
 
 env:
