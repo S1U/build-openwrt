@@ -27,7 +27,7 @@ jobs:
 
     # 定义输出变量，用于在运行结束时显示状态
     outputs:
-      status: ${{ steps.setStatus.outputs.status }}
+      status: ${{ steps.setStatusNoUpdate.outputs.status || steps.setStatusUpdateFound.outputs.status }}
       
     steps:
 
@@ -47,14 +47,14 @@ jobs:
     # 当缓存命中时，设置状态为“哈希值没有更新，不构件固件”
     - name: Set Status - No Update
       if: steps.cacheHash.outputs.cache-hit == 'true'
-      id: setStatus
+      id: setStatusNoUpdate
       run: |
         echo "status=未检测到代码变更，无需编译固件。" >> $GITHUB_OUTPUT
 
     # 当缓存未命中时，设置状态为“哈希值更新，正在构建固件”
     - name: Set Status - Update Found
       if: steps.cacheHash.outputs.cache-hit != 'true'
-      id: setStatus
+      id: setStatusUpdateFound
       run: |
         echo "status=检测到代码变更，正在编译固件。" >> $GITHUB_OUTPUT
 
