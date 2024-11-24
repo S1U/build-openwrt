@@ -1,0 +1,105 @@
+config redirect
+	option dest 'lan'
+	option target 'DNAT'
+	list proto 'udp'
+	option src 'wan'
+	option src_dport '4500'
+	option dest_ip '192.168.11.220'
+	option dest_port '4500'
+	option name 'softvpn-4500'
+
+config redirect
+	option dest 'lan'
+	option target 'DNAT'
+	list proto 'udp'
+	option src 'wan'
+	option src_dport '500'
+	option dest_ip '192.168.11.220'
+	option dest_port '500'
+	option name 'softvpn-500'
+
+config redirect
+	option dest 'lan'
+	option target 'DNAT'
+	option name '6800'
+	option src 'wan'
+	option src_dport '6800'
+	option dest_ip '192.168.11.220'
+	option dest_port '6800'
+	list proto 'tcp'
+
+config redirect
+	option dest 'lan'
+	option target 'DNAT'
+	option name '6880'
+	option src 'wan'
+	option src_dport '6880'
+	option dest_ip '192.168.11.220'
+	option dest_port '6880'
+	list proto 'tcp'
+
+config redirect
+	option dest 'lan'
+	option target 'DNAT'
+	option name '6888'
+	option src 'wan'
+	option src_dport '6888'
+	option dest_ip '192.168.11.220'
+	option dest_port '6888'
+
+config redirect
+	option dest 'lan'
+	option target 'DNAT'
+	option src 'wan'
+	option src_dport '3389'
+	option dest_ip '192.168.11.111'
+	option dest_port '3389'
+	option name 'remote-3389'
+
+config redirect
+	option dest 'lan'
+	option target 'DNAT'
+	list proto 'tcp'
+	option src 'wan'
+	option src_dport '32400'
+	option dest_ip '192.168.11.220'
+	option dest_port '32400'
+	option name 'plex-32400'
+
+config redirect
+	option dest 'lan'
+	option target 'DNAT'
+	option src 'wan'
+	option dest_ip '192.168.11.220'
+	option src_dport '1701'
+	option dest_port '1701'
+	option name 'softvpn-1701'
+
+config redirect
+	option dest 'lan'
+	option target 'DNAT'
+	option src 'wan'
+	option src_dport '27031'
+	option dest_ip '192.168.11.111'
+	option dest_port '27031'
+	option name 'steam-link-27031'
+	list proto 'udp'
+
+config redirect
+	option dest 'lan'
+	option target 'DNAT'
+	option name 'steam-link-27036'
+	option src 'wan'
+	option src_dport '27036'
+	option dest_ip '192.168.11.111'
+	option dest_port '27036'
+
+config redirect
+	option dest 'lan'
+	option target 'DNAT'
+	option name 'steam-link-27037'
+	option src 'wan'
+	option src_dport '27037'
+	option dest_ip '192.168.11.111'
+	option dest_port '27037'
+	list proto 'tcp'
