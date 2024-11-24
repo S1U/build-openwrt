@@ -15,7 +15,7 @@
 
 # Add a feed source
 echo 'src-git Openclash https://github.com/vernesong/OpenClash' >>feeds.conf.default
-echo "src-git mihomo https://github.com/morytyann/OpenWrt-mihomo.git;main" >> "feeds.conf.default"
+echo 'src-git mihomo https://github.com/morytyann/OpenWrt-mihomo.git;main' >> 'feeds.conf.default'
 # echo 'src-git smpackage https://github.com/kenzok8/small-package' >>feeds.conf.default
 # echo 'src-git helloworld https://github.com/fw876/helloworld' >>feeds.conf.default
 # echo 'src-git passwall https://github.com/xiaorouji/openwrt-passwall' >>feeds.conf.default
