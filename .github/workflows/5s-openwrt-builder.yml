@@ -27,6 +27,7 @@ env:
   CONFIG_FILE: 5s.config
   DIY_P1_SH: diy-part1.sh
   DIY_P2_SH: diy-part2.sh
+  CUSTOM_WAN: custom-wan.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: true
@@ -90,6 +91,12 @@ jobs:
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH
 
+    - name: Custom wan config
+      run: |
+        chmod +x $CUSTOM_WAN
+        cd openwrt
+        $GITHUB_WORKSPACE/$CUSTOM_WAN
+        
     - name: Download package
       id: package
       run: |
