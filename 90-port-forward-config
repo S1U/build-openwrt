@@ -1,0 +1,117 @@
+#!/bin/sh
+
+# Add custom firewall rules using UCI commands
+
+uci batch <<EOF
+add firewall redirect
+set firewall.@redirect[-1].name='softvpn-4500'
+set firewall.@redirect[-1].dest='lan'
+set firewall.@redirect[-1].target='DNAT'
+add_list firewall.@redirect[-1].proto='udp'
+set firewall.@redirect[-1].src='wan'
+set firewall.@redirect[-1].src_dport='4500'
+set firewall.@redirect[-1].dest_ip='192.168.11.220'
+set firewall.@redirect[-1].dest_port='4500'
+
+add firewall redirect
+set firewall.@redirect[-1].name='softvpn-500'
+set firewall.@redirect[-1].dest='lan'
+set firewall.@redirect[-1].target='DNAT'
+add_list firewall.@redirect[-1].proto='udp'
+set firewall.@redirect[-1].src='wan'
+set firewall.@redirect[-1].src_dport='500'
+set firewall.@redirect[-1].dest_ip='192.168.11.220'
+set firewall.@redirect[-1].dest_port='500'
+
+add firewall redirect
+set firewall.@redirect[-1].name='6800'
+set firewall.@redirect[-1].dest='lan'
+set firewall.@redirect[-1].target='DNAT'
+add_list firewall.@redirect[-1].proto='tcp'
+set firewall.@redirect[-1].src='wan'
+set firewall.@redirect[-1].src_dport='6800'
+set firewall.@redirect[-1].dest_ip='192.168.11.220'
+set firewall.@redirect[-1].dest_port='6800'
+
+add firewall redirect
+set firewall.@redirect[-1].name='6880'
+set firewall.@redirect[-1].dest='lan'
+set firewall.@redirect[-1].target='DNAT'
+add_list firewall.@redirect[-1].proto='tcp'
+set firewall.@redirect[-1].src='wan'
+set firewall.@redirect[-1].src_dport='6880'
+set firewall.@redirect[-1].dest_ip='192.168.11.220'
+set firewall.@redirect[-1].dest_port='6880'
+
+add firewall redirect
+set firewall.@redirect[-1].name='6888'
+set firewall.@redirect[-1].dest='lan'
+set firewall.@redirect[-1].target='DNAT'
+set firewall.@redirect[-1].src='wan'
+set firewall.@redirect[-1].src_dport='6888'
+set firewall.@redirect[-1].dest_ip='192.168.11.220'
+set firewall.@redirect[-1].dest_port='6888'
+
+add firewall redirect
+set firewall.@redirect[-1].name='remote-3389'
+set firewall.@redirect[-1].dest='lan'
+set firewall.@redirect[-1].target='DNAT'
+set firewall.@redirect[-1].src='wan'
+set firewall.@redirect[-1].src_dport='3389'
+set firewall.@redirect[-1].dest_ip='192.168.11.111'
+set firewall.@redirect[-1].dest_port='3389'
+
+add firewall redirect
+set firewall.@redirect[-1].name='plex-32400'
+set firewall.@redirect[-1].dest='lan'
+set firewall.@redirect[-1].target='DNAT'
+add_list firewall.@redirect[-1].proto='tcp'
+set firewall.@redirect[-1].src='wan'
+set firewall.@redirect[-1].src_dport='32400'
+set firewall.@redirect[-1].dest_ip='192.168.11.220'
+set firewall.@redirect[-1].dest_port='32400'
+
+add firewall redirect
+set firewall.@redirect[-1].name='softvpn-1701'
+set firewall.@redirect[-1].dest='lan'
+set firewall.@redirect[-1].target='DNAT'
+set firewall.@redirect[-1].src='wan'
+set firewall.@redirect[-1].src_dport='1701'
+set firewall.@redirect[-1].dest_ip='192.168.11.220'
+set firewall.@redirect[-1].dest_port='1701'
+
+add firewall redirect
+set firewall.@redirect[-1].name='steam-link-27031'
+set firewall.@redirect[-1].dest='lan'
+set firewall.@redirect[-1].target='DNAT'
+add_list firewall.@redirect[-1].proto='udp'
+set firewall.@redirect[-1].src='wan'
+set firewall.@redirect[-1].src_dport='27031'
+set firewall.@redirect[-1].dest_ip='192.168.11.111'
+set firewall.@redirect[-1].dest_port='27031'
+
+add firewall redirect
+set firewall.@redirect[-1].name='steam-link-27036'
+set firewall.@redirect[-1].dest='lan'
+set firewall.@redirect[-1].target='DNAT'
+set firewall.@redirect[-1].src='wan'
+set firewall.@redirect[-1].src_dport='27036'
+set firewall.@redirect[-1].dest_ip='192.168.11.111'
+set firewall.@redirect[-1].dest_port='27036'
+
+add firewall redirect
+set firewall.@redirect[-1].name='steam-link-27037'
+set firewall.@redirect[-1].dest='lan'
+set firewall.@redirect[-1].target='DNAT'
+add_list firewall.@redirect[-1].proto='tcp'
+set firewall.@redirect[-1].src='wan'
+set firewall.@redirect[-1].src_dport='27037'
+set firewall.@redirect[-1].dest_ip='192.168.11.111'
+set firewall.@redirect[-1].dest_port='27037'
+EOF
+
+# Commit the changes
+uci commit firewall
+
+# Remove this script after execution
+rm -f /etc/uci-defaults/90-port-forward-config
