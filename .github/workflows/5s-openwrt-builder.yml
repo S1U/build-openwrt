@@ -90,7 +90,7 @@ jobs:
     - name: Custom wan config
       run: |
         chmod +x $CUSTOM_WAN
-        cp $CUSTOM_WAN package/base-files/files/etc/uci-defaults/N
+        cp $CUSTOM_WAN package/base-files/files/etc/uci-defaults/
 
     - name: Custom port config
       run: |
