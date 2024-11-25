@@ -113,5 +113,7 @@ EOF
 # Commit the changes
 uci commit firewall
 
+/etc/init.d/firewall restart
+
 # Remove this script after execution
 rm -f /etc/uci-defaults/90-port-forward-config
