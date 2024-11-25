@@ -90,12 +90,12 @@ jobs:
     - name: Custom wan config
       run: |
         chmod +x $CUSTOM_WAN
-        cp $CUSTOM_WAN package/base-files/files/etc/uci-defaults/
+        cp $CUSTOM_WAN openwrt/package/base-files/files/etc/uci-defaults/
 
     - name: Custom port config
       run: |
         chmod +x $CUSTOM_PORT
-        cp $CUSTOM_PORT package/base-files/files/etc/uci-defaults/
+        cp $CUSTOM_PORT openwrt/package/base-files/files/etc/uci-defaults/
         
     - name: Download package
       id: package
