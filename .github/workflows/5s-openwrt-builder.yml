@@ -93,7 +93,6 @@ jobs:
 
     - name: Custom wan config
       run: |
-        cd openwrt
         chmod +x $CUSTOM_WAN
         $GITHUB_WORKSPACE/$CUSTOM_WAN
         
