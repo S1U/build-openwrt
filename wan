@@ -1,0 +1,7 @@
+config interface 'wan'                
+        option device 'eth0' 
+        option proto 'static'
+        option ipaddr '192.168.1.11'      
+        option netmask '255.255.255.0'
+        option gateway '192.168.1.1'      
+        list dns '223.5.5.5'
