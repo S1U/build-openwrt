@@ -1,6 +1,6 @@
 #!/bin/sh
 
-uci delete network.wan
+# uci delete network.wan
 
 uci -q batch <<EOF
 set network.wan=device
