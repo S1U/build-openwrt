@@ -23,6 +23,15 @@ set firewall.@redirect[-1].src_dport='500'
 set firewall.@redirect[-1].dest_ip='192.168.11.220'
 set firewall.@redirect[-1].dest_port='500'
 
+#add firewall redirect
+#set firewall.@redirect[-1].name='softvpn-1701'
+#set firewall.@redirect[-1].dest='lan'
+#set firewall.@redirect[-1].target='DNAT'
+#set firewall.@redirect[-1].src='wan'
+#set firewall.@redirect[-1].src_dport='1701'
+#set firewall.@redirect[-1].dest_ip='192.168.11.220'
+#set firewall.@redirect[-1].dest_port='1701'
+
 add firewall redirect
 set firewall.@redirect[-1].name='6800'
 set firewall.@redirect[-1].dest='lan'
@@ -70,15 +79,6 @@ set firewall.@redirect[-1].src='wan'
 set firewall.@redirect[-1].src_dport='32400'
 set firewall.@redirect[-1].dest_ip='192.168.11.220'
 set firewall.@redirect[-1].dest_port='32400'
-
-add firewall redirect
-set firewall.@redirect[-1].name='softvpn-1701'
-set firewall.@redirect[-1].dest='lan'
-set firewall.@redirect[-1].target='DNAT'
-set firewall.@redirect[-1].src='wan'
-set firewall.@redirect[-1].src_dport='1701'
-set firewall.@redirect[-1].dest_ip='192.168.11.220'
-set firewall.@redirect[-1].dest_port='1701'
 
 add firewall redirect
 set firewall.@redirect[-1].name='steam-link-27031'
