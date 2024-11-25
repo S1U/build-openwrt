@@ -27,8 +27,8 @@ env:
   CONFIG_FILE: 5s.config
   DIY_P1_SH: diy-part1.sh
   DIY_P2_SH: diy-part2.sh
-  CUSTOM_WAN: custom-wan.sh
-  CUSTOM_PORT: custom-port-forward.sh
+  CUSTOM_WAN: 80-wan-config
+  CUSTOM_PORT: 90-port-forward-config
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: true
