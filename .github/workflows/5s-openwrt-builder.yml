@@ -28,6 +28,7 @@ env:
   DIY_P1_SH: diy-part1.sh
   DIY_P2_SH: diy-part2.sh
   CUSTOM_WAN: custom-wan.sh
+  CUSTOM_PORT: custom-port-forward.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: true
@@ -67,11 +68,6 @@ jobs:
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
-    # - name: Copy firewall config file
-    #   run: |
-    #     mkdir -p /workdir/openwrt/files/etc/config
-    #     cp firewall /workdir/openwrt/files/etc/config/firewall
-
     - name: Load custom feeds
       run: |
         [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
@@ -96,7 +92,12 @@ jobs:
     - name: Custom wan config
       run: |
         chmod +x $CUSTOM_WAN
-        $GITHUB_WORKSPACE/$CUSTOM_WAN
+        cp $CUSTOM_WAN package/base-files/files/etc/uci-defaults/N
+
+    - name: Custom port config
+      run: |
+        chmod +x $CUSTOM_PORT
+        cp $CUSTOM_PORT package/base-files/files/etc/uci-defaults/
         
     - name: Download package
       id: package
