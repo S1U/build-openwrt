@@ -28,7 +28,9 @@ env:
   DIY_P1_SH: diy-part1.sh
   DIY_P2_SH: diy-part2.sh
   CUSTOM_WAN: 80-wan-config
-  CUSTOM_PORT: 90-port-forward-config
+  CUSTOM_PORT: 82-port-config
+  CUSTOM_DHCP: 96-dhcp-config
+  CUSTOM_MIHOMO: 90-mihomo-config
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: true
@@ -87,15 +89,19 @@ jobs:
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH
 
-    - name: Custom wan config
+    - name: Custom config
       run: |
         chmod +x $CUSTOM_WAN
         cp $CUSTOM_WAN openwrt/package/base-files/files/etc/uci-defaults/
 
-    - name: Custom port config
-      run: |
         chmod +x $CUSTOM_PORT
         cp $CUSTOM_PORT openwrt/package/base-files/files/etc/uci-defaults/
+
+        chmod +x $CUSTOM_DHCP
+        cp $CUSTOM_DHCP openwrt/package/base-files/files/etc/uci-defaults/
+
+        chmod +x $CUSTOM_MIHOMO
+        cp $CUSTOM_MIHOMO openwrt/package/base-files/files/etc/uci-defaults/
         
     - name: Download package
       id: package
