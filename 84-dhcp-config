@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# 添加主机配置到 /etc/config/dhcp
+uci add dhcp host
+uci set dhcp.@host[-1].name='s-omen'
+uci add_list dhcp.@host[-1].mac='28:D0:EA:FF:7F:DF'
+uci set dhcp.@host[-1].ip='192.168.11.111'
+uci set dhcp.@host[-1].leasetime='infinite'
+uci add_list dhcp.@host[-1].match_tag='known'
+EOF
+
+# 保存配置
+uci commit dhcp
+
+# 重启 DNS 和 DHCP 服务
+/etc/init.d/dnsmasq restart
+
+rm -f /etc/uci-defaults/90-dhcp-config
