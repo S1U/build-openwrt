@@ -15,7 +15,7 @@ name: 4s OpenWrt Builder
 on:
   repository_dispatch:
     types:
-      - 4s-builder
+      - 4s-auto-builder
   workflow_dispatch:
 
 env:
