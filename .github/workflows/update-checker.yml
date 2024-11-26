@@ -64,7 +64,7 @@ jobs:
       run: |
         echo ${{ steps.getHash.outputs.commitHash }} | tee .commitHash
 
-    - name: Trigger 4s-builder
+    - name: Trigger 4s-auto-builder
       if: steps.cacheHash.outputs.cache-hit != 'true'
       uses: peter-evans/repository-dispatch@v2
       with:
@@ -72,7 +72,7 @@ jobs:
         event-type: 4s-builder
         client-payload: '{"triggered_by":"update-checker.yml"}'
 
-    - name: Trigger 5s-builder
+    - name: Trigger 5s-auto-builder
       if: steps.cacheHash.outputs.cache-hit != 'true'
       uses: peter-evans/repository-dispatch@v2
       with:
