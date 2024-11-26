@@ -27,6 +27,8 @@ env:
   CONFIG_FILE: 4s.config
   DIY_P1_SH: diy-part1.sh
   DIY_P2_SH: diy-part2.sh
+  CUSTOM_DHCP: 84-dhcp-config
+  CUSTOM_MIHOMO: 86-mihomo-config
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: true
@@ -94,6 +96,14 @@ jobs:
         make download -j$(nproc) V=s
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
+
+    - name: Custom config
+      run: |
+        chmod +x $CUSTOM_DHCP
+        cp $CUSTOM_DHCP openwrt/package/base-files/files/etc/uci-defaults/
+
+        chmod +x $CUSTOM_MIHOMO
+        cp $CUSTOM_MIHOMO openwrt/package/base-files/files/etc/uci-defaults/
 
     - name: Compile the firmware
       id: compile
