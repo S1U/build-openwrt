@@ -15,4 +15,4 @@ uci commit dhcp
 # 重启 DNS 和 DHCP 服务
 /etc/init.d/dnsmasq restart
 
-rm -f /etc/uci-defaults/90-dhcp-config
+rm -f /etc/uci-defaults/84-dhcp-config
