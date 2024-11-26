@@ -29,8 +29,8 @@ env:
   DIY_P2_SH: diy-part2.sh
   CUSTOM_WAN: 80-wan-config
   CUSTOM_PORT: 82-port-config
-  CUSTOM_DHCP: 96-dhcp-config
-  CUSTOM_MIHOMO: 90-mihomo-config
+  CUSTOM_DHCP: 84-dhcp-config
+  CUSTOM_MIHOMO: 86-mihomo-config
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: true
