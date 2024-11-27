@@ -1,5 +1,6 @@
 #!/bin/sh
 
+uci batch <<EOF
 # 添加主机配置到 /etc/config/dhcp
 uci add dhcp host
 uci set dhcp.@host[-1].name='s-omen'
