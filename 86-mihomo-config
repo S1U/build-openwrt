@@ -15,7 +15,6 @@ uci set mihomo.mixin.dns_doh_prefer_http3='1'
 uci set mihomo.mixin.geoip_format='mmdb'
 uci set mihomo.mixin.geox_auto_update='1'
 uci set mihomo.mixin.api_secret='0112358'
-
 EOF
 
 uci commit mihomo
