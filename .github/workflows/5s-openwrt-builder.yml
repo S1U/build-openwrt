@@ -31,6 +31,7 @@ env:
   CUSTOM_PORT: 82-port-config
   CUSTOM_DHCP: 84-dhcp-config
   CUSTOM_MIHOMO: 86-mihomo-config
+  CUSTOM_SYSTEM: 88-system-config
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: true
@@ -102,7 +103,10 @@ jobs:
 
         chmod +x $CUSTOM_MIHOMO
         cp $CUSTOM_MIHOMO openwrt/package/base-files/files/etc/uci-defaults/
-        
+
+        chmod +x $CUSTOM_SYSTEM
+        cp $CUSTOM_SYSTEM openwrt/package/base-files/files/etc/uci-defaults/     
+
     - name: Download package
       id: package
       run: |
