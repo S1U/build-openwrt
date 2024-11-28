@@ -1,20 +1,20 @@
 #!/bin/sh
 
 uci batch <<EOF
-uci set mihomo.config.enabled='1'
+set mihomo.config.enabled='1'
 
-uci set mihomo.proxy.tcp_transparent_proxy_mode='tun'
-uci set mihomo.proxy.bypass_china_mainland_ip='1'
+set mihomo.proxy.tcp_transparent_proxy_mode='tun'
+set mihomo.proxy.bypass_china_mainland_ip='1'
 
-uci set mihomo.subscription.name='uk'
-uci set mihomo.subscription.url='https://sub.unkind.uk'
+set mihomo.subscription.name='uk'
+set mihomo.subscription.url='https://sub.unkind.uk'
 
-uci set mihomo.mixin.authentication='0'
-uci set mihomo.mixin.fake_ip_cache='0'
-uci set mihomo.mixin.dns_doh_prefer_http3='1'
-uci set mihomo.mixin.geoip_format='mmdb'
-uci set mihomo.mixin.geox_auto_update='1'
-uci set mihomo.mixin.api_secret='0112358'
+set mihomo.mixin.authentication='0'
+set mihomo.mixin.fake_ip_cache='0'
+set mihomo.mixin.dns_doh_prefer_http3='1'
+set mihomo.mixin.geoip_format='mmdb'
+set mihomo.mixin.geox_auto_update='1'
+et mihomo.mixin.api_secret='0112358'
 EOF
 
 uci commit mihomo
