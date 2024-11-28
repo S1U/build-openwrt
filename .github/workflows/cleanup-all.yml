@@ -1,4 +1,4 @@
-name: Clean up all
+name: Delete All Workflows, Releases, and Tags
 
 on:
   workflow_dispatch:
@@ -15,6 +15,11 @@ jobs:
   cleanup:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # 获取所有历史和标签
+
       - name: Check confirmation
         if: github.event.inputs.confirm != 'YES'
         run: |
@@ -41,12 +46,21 @@ jobs:
             gh release delete "$release" -R ${{ github.repository }} -y || true
           done
 
-      - name: Delete All Tags
+      - name: Delete All Local and Remote Tags
         env:
           GH_TOKEN: ${{ secrets.BUILD_TOKEN }}
         run: |
-          # List and delete tags
-          tags=$(git ls-remote --tags origin | awk '{print $2}' | sed 's/refs\/tags\///')
+          # 删除本地标签
+          git tag | xargs -n 1 git tag -d
+
+          # 删除远程标签
+          git push origin --delete $(git tag)
+
+          # 使用 GitHub CLI 删除远程标签
+          tags=$(gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/tags | jq -r '.[].name')
           for tag in $tags; do
             gh api -X DELETE /repos/${{ github.repository }}/git/refs/tags/$tag || true
           done
+
+          # 再次确认删除所有远程标签
+          git push origin --tags --force
