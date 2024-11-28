@@ -50,11 +50,16 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.BUILD_TOKEN }}
         run: |
+          # 获取所有远程标签
+          remote_tags=$(git ls-remote --tags origin | awk '{print $2}' | sed 's/refs\/tags\///')
+
           # 删除本地标签
           git tag | xargs -n 1 git tag -d
 
           # 删除远程标签
-          git push origin --delete $(git tag)
+          if [ -n "$remote_tags" ]; then
+            git push origin --delete $remote_tags || true
+          fi
 
           # 使用 GitHub CLI 删除远程标签
           tags=$(gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/tags | jq -r '.[].name')
@@ -62,5 +67,5 @@ jobs:
             gh api -X DELETE /repos/${{ github.repository }}/git/refs/tags/$tag || true
           done
 
-          # 再次确认删除所有远程标签
+          # 强制推送删除所有标签
           git push origin --tags --force
