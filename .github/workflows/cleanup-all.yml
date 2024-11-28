@@ -1,4 +1,4 @@
-name: Delete All Workflows, Releases, and Tags
+name: Clean up all
 
 on:
   workflow_dispatch:
