@@ -23,7 +23,7 @@ jobs:
 
       - name: Delete All Workflows
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.BUILD_TOKEN }}
         run: |
           # List and delete workflow runs
           workflows=$(gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/runs | jq -r '.workflow_runs[].id')
@@ -33,7 +33,7 @@ jobs:
 
       - name: Delete All Releases
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.BUILD_TOKEN }}
         run: |
           # List and delete releases
           releases=$(gh release list -R ${{ github.repository }} | awk '{print $1}')
@@ -43,7 +43,7 @@ jobs:
 
       - name: Delete All Tags
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.BUILD_TOKEN }}
         run: |
           # List and delete tags
           tags=$(git ls-remote --tags origin | awk '{print $2}' | sed 's/refs\/tags\///')
