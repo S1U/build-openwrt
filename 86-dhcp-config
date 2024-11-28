@@ -2,12 +2,12 @@
 
 uci batch <<EOF
 # 添加主机配置到 /etc/config/dhcp
-uci add dhcp host
-uci set dhcp.@host[-1].name='s-omen'
-uci add_list dhcp.@host[-1].mac='28:D0:EA:FF:7F:DF'
-uci set dhcp.@host[-1].ip='192.168.11.111'
-uci set dhcp.@host[-1].leasetime='infinite'
-uci add_list dhcp.@host[-1].match_tag='known'
+add dhcp host
+set dhcp.@host[-1].name='s-omen'
+add_list dhcp.@host[-1].mac='28:D0:EA:FF:7F:DF'
+set dhcp.@host[-1].ip='192.168.11.111'
+set dhcp.@host[-1].leasetime='infinite'
+add_list dhcp.@host[-1].match_tag='known'
 EOF
 
 # 保存配置
