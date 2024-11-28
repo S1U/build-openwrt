@@ -1,0 +1,52 @@
+name: Delete All Workflows, Releases, and Tags
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Confirm deletion (type YES to proceed)'
+        required: true
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check confirmation
+        if: github.event.inputs.confirm != 'YES'
+        run: |
+          echo "Deletion not confirmed. Please type 'YES' to proceed."
+          exit 1
+
+      - name: Delete All Workflows
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # List and delete workflow runs
+          workflows=$(gh api -H "Accept: application/vnd.github+json" /repos/${{ github.repository }}/actions/runs | jq -r '.workflow_runs[].id')
+          for run in $workflows; do
+            gh api -X DELETE /repos/${{ github.repository }}/actions/runs/$run || true
+          done
+
+      - name: Delete All Releases
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # List and delete releases
+          releases=$(gh release list -R ${{ github.repository }} | awk '{print $1}')
+          for release in $releases; do
+            gh release delete "$release" -R ${{ github.repository }} -y || true
+          done
+
+      - name: Delete All Tags
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # List and delete tags
+          tags=$(git ls-remote --tags origin | awk '{print $2}' | sed 's/refs\/tags\///')
+          for tag in $tags; do
+            gh api -X DELETE /repos/${{ github.repository }}/git/refs/tags/$tag || true
+          done
