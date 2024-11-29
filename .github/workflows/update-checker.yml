@@ -13,6 +13,7 @@
 name: Update Checker
 
 env:
+  TZ: Asia/Shanghai
   REPO_URL: https://github.com/openwrt/openwrt/
   # REPO_BRANCH: main
   REPO_BRANCH: openwrt-24.10
