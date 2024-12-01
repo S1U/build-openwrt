@@ -17,8 +17,11 @@ set mihomo.mixin.geox_auto_update='1'
 set mihomo.mixin.api_secret='0112358'
 EOF
 
+# 保存配置
 uci commit mihomo
 
+# 重启mihomo
 /etc/init.d/mihomo restart
 
+# 删除
 rm -f /etc/uci-defaults/86-mihomo-config
