@@ -84,8 +84,10 @@ jobs:
 
     # 清理旧缓存，只保留最新的缓存
     - name: Clean up old caches
+      env:
+        GH_TOKEN: ${{ secrets.BUILD_TOKEN }} # 显式设置 GH_TOKEN 环境变量
       run: |
         echo "Cleaning up old caches..."
         gh api -H "Authorization: token ${{ secrets.BUILD_TOKEN }}" /repos/${{ github.repository }}/actions/caches \
         | jq -r '.actions_caches | sort_by(.last_accessed_at) | reverse | .[1:] | .[].id' \
-        | xargs -n1 -I{} gh api -X DELETE -H "Authorization: token ${{ secrets.BUILD_TOKEN }}" /repos/${{ github.repository }}/actions/caches/{}
+        | xargs -I{} gh api -X DELETE -H "Authorization: token ${{ secrets.BUILD_TOKEN }}" /repos/${{ github.repository }}/actions/caches/{}
