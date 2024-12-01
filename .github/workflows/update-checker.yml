@@ -83,14 +83,9 @@ jobs:
         client-payload: '{"triggered_by":"update-checker.yml"}'
 
     # 清理旧缓存，只保留最新的缓存
-    # 新增部分：使用 GitHub CLI 和 jq 删除旧缓存
     - name: Clean up old caches
       run: |
         echo "Cleaning up old caches..."
-        gh api -H "Authorization: token ${{ secrets.BUILD_TOKEN }}" \
-          /repos/${{ github.repository }}/actions/caches \
-          | jq -r '.actions_caches[] | select(.key != "latest_commit_hash") | .id' \
-          | xargs -n1 -I{} gh api \
-          -X DELETE -H "Authorization: token ${{ secrets.BUILD_TOKEN }}" \
-          /repos/${{ github.repository }}/actions/caches/{}
-        # 新增：清理逻辑确保只保留最新缓存
+        gh api -H "Authorization: token ${{ secrets.BUILD_TOKEN }}" /repos/${{ github.repository }}/actions/caches \
+        | jq -r '.actions_caches | sort_by(.last_accessed_at) | reverse | .[1:] | .[].id' \
+        | xargs -n1 -I{} gh api -X DELETE -H "Authorization: token ${{ secrets.BUILD_TOKEN }}" /repos/${{ github.repository }}/actions/caches/{}
