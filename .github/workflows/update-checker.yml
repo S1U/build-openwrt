@@ -87,10 +87,10 @@ jobs:
     - name: Clean up old caches
       run: |
         echo "Cleaning up old caches..."
-        gh api -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+        gh api -H "Authorization: token ${{ secrets.BUILD_TOKEN }}" \
           /repos/${{ github.repository }}/actions/caches \
           | jq -r '.actions_caches[] | select(.key != "latest_commit_hash") | .id' \
           | xargs -n1 -I{} gh api \
-          -X DELETE -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          -X DELETE -H "Authorization: token ${{ secrets.BUILD_TOKEN }}" \
           /repos/${{ github.repository }}/actions/caches/{}
         # 新增：清理逻辑确保只保留最新缓存
