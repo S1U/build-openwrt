@@ -13,6 +13,7 @@ set network.wan.netmask='255.255.255.0'
 set network.wan.gateway='192.168.1.1'
 add_list network.wan.dns='223.5.5.5'
 EOF
+
 commit network
 /etc/init.d/network restart
 rm -f /etc/uci-defaults/80-wan-config
