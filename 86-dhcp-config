@@ -5,7 +5,7 @@ uci batch <<EOF
 add dhcp host
 set dhcp.@host[-1].name='s-omen'
 add_list dhcp.@host[-1].mac='28:D0:EA:FF:7F:DF'
-set dhcp.@host[-1].ip='192.168.11.111'
+set dhcp.@host[-1].ip='192.168.11.143'
 set dhcp.@host[-1].leasetime='infinite'
 add_list dhcp.@host[-1].match_tag='known'
 EOF
