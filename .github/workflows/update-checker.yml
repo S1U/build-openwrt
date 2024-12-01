@@ -2,12 +2,7 @@
 # https://github.com/P3TERX/Actions-OpenWrt
 #
 # File: .github/workflows/update-checker.yml
-# Description: Source code update checker
-#
-# Copyright (c) 2019-2024 P3TERX <https://p3terx.com>
-#
-# This is free software, licensed under the MIT License.
-# See /LICENSE for more information.
+# Description: Source code update checker with cache cleanup
 #
 
 name: Update Checker
@@ -15,7 +10,6 @@ name: Update Checker
 env:
   TZ: Asia/Shanghai
   REPO_URL: https://github.com/openwrt/openwrt/
-  # REPO_BRANCH: main
   REPO_BRANCH: openwrt-24.10
 
 on:
@@ -27,44 +21,50 @@ jobs:
   check:
     runs-on: ubuntu-latest
 
-    # 定义输出变量，用于在运行结束时显示状态
     outputs:
       status: ${{ steps.setStatusNoUpdate.outputs.status || steps.setStatusUpdateFound.outputs.status }}
-      
+
     steps:
 
+    # 获取最新提交的哈希值
     - name: Get Commit Hash
       id: getHash
       run: |
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH .
         echo "commitHash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
+    # 使用固定的缓存键 "latest_commit_hash"
+    # 修改点：优化为固定缓存键，避免动态键生成多余缓存
     - name: Compare Commit Hash
       id: cacheHash
       uses: actions/cache@v3
       with:
         path: .commitHash
-        key: commitHash_${{ steps.getHash.outputs.commitHash }}
+        key: latest_commit_hash   # 优化：固定缓存键
+        restore-keys: |
+          latest_commit_hash      # 优化：匹配同样的缓存键
 
-    # 当缓存命中时，设置状态为“哈希值没有更新，不构件固件”
+    # 设置状态为代码未更新
     - name: Set Status - No Update
       if: steps.cacheHash.outputs.cache-hit == 'true'
       id: setStatusNoUpdate
       run: |
         echo "status=未检测到代码变更，无需编译固件。" >> $GITHUB_OUTPUT
 
-    # 当缓存未命中时，设置状态为“哈希值更新，正在构建固件”
+    # 设置状态为代码已更新
     - name: Set Status - Update Found
       if: steps.cacheHash.outputs.cache-hit != 'true'
       id: setStatusUpdateFound
       run: |
         echo "status=检测到代码变更，正在编译固件。" >> $GITHUB_OUTPUT
 
+    # 保存最新提交的哈希值
     - name: Save New Commit Hash
       if: steps.cacheHash.outputs.cache-hit != 'true'
       run: |
         echo ${{ steps.getHash.outputs.commitHash }} | tee .commitHash
 
+    # 如果代码更新，触发 4s-auto-builder 构建任务
     - name: Trigger 4s-auto-builder
       if: steps.cacheHash.outputs.cache-hit != 'true'
       uses: peter-evans/repository-dispatch@v2
@@ -73,6 +73,7 @@ jobs:
         event-type: 4s-auto-builder
         client-payload: '{"triggered_by":"update-checker.yml"}'
 
+    # 如果代码更新，触发 5s-auto-builder 构建任务
     - name: Trigger 5s-auto-builder
       if: steps.cacheHash.outputs.cache-hit != 'true'
       uses: peter-evans/repository-dispatch@v2
@@ -81,10 +82,15 @@ jobs:
         event-type: 5s-auto-builder
         client-payload: '{"triggered_by":"update-checker.yml"}'
 
-    - name: Delete workflow runs
-      uses: Mattraks/delete-workflow-runs@v2
-      with:
-          token: ${{ secrets.BUILD_TOKEN }}
-          repository: ${{ github.repository }}
-          retain_days: 0
-          keep_minimum_runs: 2
+    # 清理旧缓存，只保留最新的缓存
+    # 新增部分：使用 GitHub CLI 和 jq 删除旧缓存
+    - name: Clean up old caches
+      run: |
+        echo "Cleaning up old caches..."
+        gh api -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          /repos/${{ github.repository }}/actions/caches \
+          | jq -r '.actions_caches[] | select(.key != "latest_commit_hash") | .id' \
+          | xargs -n1 -I{} gh api \
+          -X DELETE -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          /repos/${{ github.repository }}/actions/caches/{}
+        # 新增：清理逻辑确保只保留最新缓存
