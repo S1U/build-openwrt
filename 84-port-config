@@ -116,4 +116,4 @@ uci commit firewall
 /etc/init.d/firewall restart
 
 # Remove this script after execution
-rm -f /etc/uci-defaults/82-port-config
+rm -f /etc/uci-defaults/84-port-config
