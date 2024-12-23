@@ -24,4 +24,4 @@ uci commit mihomo
 /etc/init.d/mihomo restart
 
 # 删除
-rm -f /etc/uci-defaults/86-mihomo-config
+rm -f /etc/uci-defaults/88-mihomo-config
