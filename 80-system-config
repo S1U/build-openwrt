@@ -7,4 +7,4 @@ EOF
 
 uci commit system
 /etc/init.d/system restart
-rm -f /etc/uci-defaults/88-system-config
+rm -f /etc/uci-defaults/80-system-config
