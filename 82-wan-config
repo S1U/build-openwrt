@@ -16,4 +16,4 @@ EOF
 
 commit network
 /etc/init.d/network restart
-rm -f /etc/uci-defaults/80-wan-config
+rm -f /etc/uci-defaults/82-wan-config
