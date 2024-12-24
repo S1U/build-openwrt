@@ -92,7 +92,7 @@ jobs:
       run: |
         echo "Cleaning up old caches..."
         gh api -H "Authorization: token ${{ secrets.BUILD_TOKEN }}" /repos/${{ github.repository }}/actions/caches \
-        | jq -r '.actions_caches | map(select(.key | startswith("update-checker-"))) | sort_by(.last_accessed_at) | reverse | .[1:] | .[].id' \
+        | jq -r '.actions_caches | map(select(.key | startswith("update-"))) | sort_by(.last_accessed_at) | reverse | .[1:] | .[].id' \
         | xargs -I{} gh api -X DELETE -H "Authorization: token ${{ secrets.BUILD_TOKEN }}" /repos/${{ github.repository }}/actions/caches/{}
       # 说明: 清理 `update-checker` 相关的旧缓存，仅保留最新的缓存
 
