@@ -33,16 +33,16 @@ jobs:
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH .
         echo "commitHash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
-    # 使用固定的缓存键 "latest_commit_hash"
-    # 修改点：优化为固定缓存键，避免动态键生成多余缓存
+    # 使用动态的缓存键，键名包含具体的哈希值
+    # 修改点 1: 缓存键动态设置为最新哈希值
     - name: Compare Commit Hash
       id: cacheHash
       uses: actions/cache@v3
       with:
         path: .commitHash
-        key: latest_commit_hash   # 优化：固定缓存键
+        key: ${{ steps.getHash.outputs.commitHash }}  # 动态缓存键
         restore-keys: |
-          latest_commit_hash      # 优化：匹配同样的缓存键
+          latest_commit_hash  # 保留支持旧逻辑
 
     # 设置状态为代码未更新
     - name: Set Status - No Update
@@ -83,6 +83,7 @@ jobs:
         client-payload: '{"triggered_by":"update-checker.yml"}'
 
     # 清理旧缓存，只保留最新的缓存
+    # 修改点 2: 删除基于最新哈希值动态缓存的旧数据
     - name: Clean up old caches
       env:
         GH_TOKEN: ${{ secrets.BUILD_TOKEN }} # 显式设置 GH_TOKEN 环境变量
@@ -90,4 +91,4 @@ jobs:
         echo "Cleaning up old caches..."
         gh api -H "Authorization: token ${{ secrets.BUILD_TOKEN }}" /repos/${{ github.repository }}/actions/caches \
         | jq -r '.actions_caches | sort_by(.last_accessed_at) | reverse | .[1:] | .[].id' \
-        | xargs -I{} gh api -X DELETE -H "Authorization: token ${{ secrets.BUILD_TOKEN }}" /repos/${{ github.repository }}/actions/caches/{}
+        | xargs -I{} gh api -X DELETE -H "Authorization: token ${{ secrets.BUILD_TOKEN }}" /repos/${{ github.repository }}/actions/caches/{} 
