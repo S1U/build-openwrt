@@ -29,7 +29,7 @@ env:
   DIY_P2_SH: diy-part2.sh
   CUSTOM_SYSTEM: 80-system-config
   CUSTOM_MIHOMO: 88-mihomo-config
-  UPLOAD_BIN_DIR: false
+  UPLOAD_BIN_DIR: true
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
