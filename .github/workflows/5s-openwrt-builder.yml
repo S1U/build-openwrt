@@ -32,7 +32,7 @@ env:
   CUSTOM_PORT: 84-port-config
   CUSTOM_DHCP: 86-dhcp-config
   CUSTOM_MIHOMO: 88-mihomo-config
-  UPLOAD_BIN_DIR: false
+  UPLOAD_BIN_DIR: true
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
@@ -170,7 +170,7 @@ jobs:
         echo "status=success" >> $GITHUB_OUTPUT
 
     - name: Upload firmware to release
-      uses: softprops/action-gh-release@master
+      uses: softprops/action-gh-release@v2
       if: steps.tag.outputs.status == 'success' && !cancelled()
       env:
         GITHUB_TOKEN: ${{ secrets.BUILD_TOKEN }}
