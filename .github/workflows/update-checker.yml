@@ -79,8 +79,9 @@ jobs:
         for builder in "${builders[@]}"; do
           echo "Triggering $builder ..."
           gh api repos/${{ github.repository }}/dispatches \
-            -F event_type="$builder" \
-            -F client_payload='{"triggered_by":"update-checker.yml","commitHash":"'"${{ steps.getHash.outputs.commitHash }}"'"}'
+            --raw-field event_type="$builder" \
+            --raw-field client_payload.triggered_by="update-checker.yml" \
+            --raw-field client_payload.commitHash="${{ steps.getHash.outputs.commitHash }}"
         done
       # 说明: 动态触发多个构建任务，分别为 4s 和 5s 构建器
 
