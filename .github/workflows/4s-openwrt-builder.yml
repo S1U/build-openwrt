@@ -157,6 +157,14 @@ jobs:
         [ ${UPLOAD_GOFILE} = true && ${{ steps.gofile.outputs.url }} ] && echo "🔗 [GoFile](${{ steps.gofile.outputs.url }})" >> release.txt
         echo "status=success" >> $GITHUB_OUTPUT
 
+    - name: Check files before release upload
+      run: |
+        echo "Checking firmware directory contents..."
+        ls -lh ${{ env.FIRMWARE }}
+        # 如果需要，还可以打印更多的调试信息
+        echo "FIRMWARE directory: ${{ env.FIRMWARE }}"
+        find ${{ env.FIRMWARE }} -type f -exec ls -lh {} \;
+        
     - name: Upload firmware to release
       uses: softprops/action-gh-release@master
       if: steps.tag.outputs.status == 'success' && !cancelled()
