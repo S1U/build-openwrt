@@ -1,0 +1,16 @@
+name: Show Workspace
+
+on: [push]
+
+jobs:
+  show-workspace:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: List files in workspace
+        run: |
+          echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+          echo "Listing files in workspace:"
+          ls -R $GITHUB_WORKSPACE
