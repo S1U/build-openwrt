@@ -43,7 +43,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: .commitHash
-        key: update-checker-${{ steps.getHash.outputs.commitHash }}  # 动态缓存键
+        key: update-${{ steps.getHash.outputs.commitHash }}  # 动态缓存键
       # 说明: 使用提交哈希值作为缓存键，以判断是否有更新
 
     # 3. 如果代码未更新，设置状态为“无更新”
