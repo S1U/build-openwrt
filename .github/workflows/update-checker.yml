@@ -7,88 +7,89 @@
 
 name: Update Checker
 
+# 设置全局环境变量
 env:
-  TZ: Asia/Shanghai
-  REPO_URL: https://github.com/openwrt/openwrt/
-  REPO_BRANCH: openwrt-24.10
+  TZ: Asia/Shanghai  # 设置时区
+  REPO_URL: https://github.com/openwrt/openwrt/  # 要监控的源代码仓库
+  REPO_BRANCH: openwrt-24.10  # 要监控的分支
 
+# 定义触发条件
 on:
-  workflow_dispatch:
+  workflow_dispatch:  # 支持手动触发
   schedule:
-    - cron: 0 0 * * 5
+    - cron: 0 0 * * 5  # 每周五 0 点定时触发
 
 jobs:
   check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # 使用最新的 Ubuntu 环境运行
 
     outputs:
+      # 将最终状态作为工作流的输出
       status: ${{ steps.setStatusNoUpdate.outputs.status || steps.setStatusUpdateFound.outputs.status }}
 
     steps:
 
-    # 获取最新提交的哈希值
+    # 1. 获取最新提交的哈希值
     - name: Get Commit Hash
       id: getHash
       run: |
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH .
         echo "commitHash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+      # 说明: 克隆指定分支并提取最新的提交哈希值
 
-    # 使用动态的缓存键，键名包含具体的哈希值
-    # 修改点 1: 缓存键动态设置为最新哈希值
+    # 2. 检查是否已有缓存，使用动态的哈希值作为缓存键
     - name: Compare Commit Hash
       id: cacheHash
       uses: actions/cache@v3
       with:
         path: .commitHash
-        key: ${{ steps.getHash.outputs.commitHash }}  # 动态缓存键
-        restore-keys: |
-          latest_commit_hash  # 保留支持旧逻辑
+        key: update-checker-${{ steps.getHash.outputs.commitHash }}  # 动态缓存键
+      # 说明: 使用提交哈希值作为缓存键，以判断是否有更新
 
-    # 设置状态为代码未更新
+    # 3. 如果代码未更新，设置状态为“无更新”
     - name: Set Status - No Update
       if: steps.cacheHash.outputs.cache-hit == 'true'
       id: setStatusNoUpdate
       run: |
         echo "status=未检测到代码变更，无需编译固件。" >> $GITHUB_OUTPUT
 
-    # 设置状态为代码已更新
+    # 4. 如果代码更新，设置状态为“已更新”
     - name: Set Status - Update Found
       if: steps.cacheHash.outputs.cache-hit != 'true'
       id: setStatusUpdateFound
       run: |
         echo "status=检测到代码变更，正在编译固件。" >> $GITHUB_OUTPUT
 
-    # 保存最新提交的哈希值
+    # 5. 保存最新的提交哈希值到缓存
     - name: Save New Commit Hash
       if: steps.cacheHash.outputs.cache-hit != 'true'
       run: |
         echo ${{ steps.getHash.outputs.commitHash }} | tee .commitHash
+      # 说明: 保存最新提交哈希值，供缓存机制使用
 
-    # 如果代码更新，触发 4s-auto-builder 构建任务
-    - name: Trigger 4s-auto-builder
+    # 6. 如果代码更新，触发多个自动构建任务
+    - name: Trigger Auto-Builders
       if: steps.cacheHash.outputs.cache-hit != 'true'
-      uses: peter-evans/repository-dispatch@v2
-      with:
-        token: ${{ secrets.BUILD_TOKEN }}
-        event-type: 4s-auto-builder
-        client-payload: '{"triggered_by":"update-checker.yml"}'
+      run: |
+        # 定义构建任务列表
+        builders=("4s-auto-builder" "5s-auto-builder")
+        # 遍历每个构建任务并触发
+        for builder in "${builders[@]}"; do
+          echo "Triggering $builder ..."
+          gh api repos/${{ github.repository }}/dispatches \
+            -H "Authorization: token ${{ secrets.BUILD_TOKEN }}" \
+            -F event_type="$builder" \
+            -F client_payload='{"triggered_by":"update-checker.yml","commitHash":"${{ steps.getHash.outputs.commitHash }}"}'
+        done
+      # 说明: 动态触发多个构建任务，分别为 4s 和 5s 构建器
 
-    # 如果代码更新，触发 5s-auto-builder 构建任务
-    - name: Trigger 5s-auto-builder
-      if: steps.cacheHash.outputs.cache-hit != 'true'
-      uses: peter-evans/repository-dispatch@v2
-      with:
-        token: ${{ secrets.BUILD_TOKEN }}
-        event-type: 5s-auto-builder
-        client-payload: '{"triggered_by":"update-checker.yml"}'
-
-    # 清理旧缓存，只保留最新的缓存
-    # 修改点 2: 删除基于最新哈希值动态缓存的旧数据
+    # 7. 清理旧缓存，仅保留最新的缓存
     - name: Clean up old caches
       env:
-        GH_TOKEN: ${{ secrets.BUILD_TOKEN }} # 显式设置 GH_TOKEN 环境变量
+        GH_TOKEN: ${{ secrets.BUILD_TOKEN }}  # 设置访问令牌
       run: |
         echo "Cleaning up old caches..."
         gh api -H "Authorization: token ${{ secrets.BUILD_TOKEN }}" /repos/${{ github.repository }}/actions/caches \
-        | jq -r '.actions_caches | sort_by(.last_accessed_at) | reverse | .[1:] | .[].id' \
-        | xargs -I{} gh api -X DELETE -H "Authorization: token ${{ secrets.BUILD_TOKEN }}" /repos/${{ github.repository }}/actions/caches/{} 
+        | jq -r '.actions_caches | map(select(.key | startswith("update-checker-"))) | sort_by(.last_accessed_at) | reverse | .[1:] | .[].id' \
+        | xargs -I{} gh api -X DELETE -H "Authorization: token ${{ secrets.BUILD_TOKEN }}" /repos/${{ github.repository }}/actions/caches/{}
+      # 说明: 清理 `update-checker` 相关的旧缓存，仅保留最新的缓存
