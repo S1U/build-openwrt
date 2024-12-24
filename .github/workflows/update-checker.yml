@@ -70,6 +70,8 @@ jobs:
     # 6. 如果代码更新，触发多个自动构建任务
     - name: Trigger Auto-Builders
       if: steps.cacheHash.outputs.cache-hit != 'true'
+      env:
+        GH_TOKEN: ${{ secrets.BUILD_TOKEN }}  # 显式设置 GH_TOKEN 环境变量
       run: |
         # 定义构建任务列表
         builders=("4s-auto-builder" "5s-auto-builder")
