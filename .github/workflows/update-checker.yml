@@ -73,14 +73,18 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.BUILD_TOKEN }}
       run: |
-        # 定义构建任务列表
         builders=("4s-auto-builder" "5s-auto-builder")
-        # 遍历每个构建任务并触发
+    
         for builder in "${builders[@]}"; do
           echo "Triggering $builder ..."
+    
+          # 1. 先构造一个 JSON 字符串
+          jsonData="{\"triggered_by\":\"update-checker.yml\",\"commitHash\":\"${{ steps.getHash.outputs.commitHash }}\"}"
+    
+          # 2. 用 @ 前缀告诉 gh "这是 JSON"，而不是纯字符串
           gh api repos/${{ github.repository }}/dispatches \
             -f event_type="$builder" \
-            -f client_payload='{"triggered_by":"update-checker.yml","commitHash":"'${{ steps.getHash.outputs.commitHash }}'"}'
+            -f client_payload=@${jsonData}
         done
       # 说明: 动态触发多个构建任务，分别为 4s 和 5s 构建器
 
